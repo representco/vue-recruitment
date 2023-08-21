@@ -74,6 +74,9 @@ module.exports = {
         half: '50%',
         15: '3.75rem',
       },
+      gridTemplateColumns: {
+        '25-75': '0.25fr 0.75fr',
+      },
       transitionTimingFunction: {
         'quad-out': 'cubic-bezier(0.5, 1, 0.89, 1)',
       },

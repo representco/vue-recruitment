@@ -18,56 +18,29 @@
         </button>
         <transition name="fade">
           <div v-if="isActive(item.id)" class="mt-2">
-            <div v-for="(section, key) in item.sections" :key="key">
-              <div class="font-bold italic text-offblack">
-                {{ section.title }}
-              </div>
-              <ul>
-                <li
-                  v-for="(subItem, subItemKey) in section.subItems"
-                  :key="subItemKey"
-                >
-                  <a :href="subItem.link" class="italic text-blue">{{
-                    subItem.text
-                  }}</a>
-                </li>
-              </ul>
-            </div>
+            <MultiColumnContent :sections="item.sections" />
           </div>
         </transition>
       </div>
     </div>
     <!-- Desktop View -->
-    <div class="hidden md:grid md:grid-cols-1 h-screen">
+    <div class="hidden md:block">
       <div
         v-for="(item, index) in menuItems"
         :key="index"
-        class="flex border-b"
+        class="grid grid-cols-25-75 xl:grid-cols-1 md:border-b xl:border-b-0"
       >
-        <div class="w-1/4 p-4">
+        <div class="md:p-4 xl:p-0 xl:border-b">
           <a :href="item.link" class="font-bold italic text-offblack">{{
             item.title
           }}</a>
+          <p class="hidden xl:block">{{ item.description }}</p>
         </div>
-        <div class="w-3/4 grid grid-cols-3 gap-4 p-4">
-          <div v-for="(section, key) in item.sections" :key="key">
-            <div>
-              <span class="font-bold italic text-offblack">
-                {{ section.title }}
-              </span>
-              <ul>
-                <li
-                  v-for="(subItem, subItemkey) in section.subItems"
-                  :key="subItemkey"
-                >
-                  <a :href="subItem.link" class="italic text-blue">{{
-                    subItem.text
-                  }}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+
+        <MultiColumnContent
+          :sections="item.sections"
+          class="md:grid grid-flow-col grid-cols-2 grid-rows-4 xl:grid-cols-3 xl:grid-rows-3 gap-4 py-4"
+        />
       </div>
     </div>
   </div>
@@ -76,6 +49,9 @@
 <script scoped>
 export default {
   name: 'MobileAccordion',
+  components: {
+    MultiColumnContent: () => import('@/components/MultiColumnContent.vue'),
+  },
   props: {
     menuItems: {
       type: Array,
@@ -85,6 +61,7 @@ export default {
   data: () => ({
     activeItems: [],
   }),
+
   methods: {
     toggleItem(id) {
       const index = this.activeItems.indexOf(id)
