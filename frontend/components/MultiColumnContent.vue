@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-for="(section, key) in sections" :key="key">
-      {{ $attrs.class }}
       <div>
         <span class="font-bold italic text-offblack">
           {{ section.title }}
