@@ -1,27 +1,19 @@
 <template>
   <div class="p-4">
-    <div
-      v-for="(item, menuKey) in menuItems"
-      :key="menuKey"
-      class="border-b-2 border-gray-200 py-2"
-    >
+    <div class="border-b-2 border-gray-200 py-2">
       <div class="md:hidden">
         <button
           class="w-full flex justify-between items-center"
-          @click="toggleItem(item.id)"
+          @click="toggleOpen"
         >
-          <span class="font-bold italic text-offblack">{{ item.title }}</span>
+          <span class="font-bold italic text-offblack">{{ name }}</span>
           <span class="text-xl px-2">
-            {{ isActive(item.id) ? '-' : '+' }}
+            {{ isOpen ? '-' : '+' }}
           </span>
         </button>
-
-        <div v-if="isActive(item.id)" class="mt-2">
-          <slot name="content" :item="item"></slot>
-        </div>
       </div>
-      <div class="hidden md:block">
-        <slot name="content" :item="item"></slot>
+      <div class="accordion" :class="{ 'is-open': isOpen }">
+        <slot></slot>
       </div>
     </div>
   </div>
@@ -31,6 +23,10 @@
 export default {
   name: 'MobileAccordion',
   props: {
+    name: {
+      type: String,
+      default: '',
+    },
     menuItems: {
       type: Array,
       default: () => [],
@@ -38,30 +34,39 @@ export default {
   },
   data: () => ({
     activeItems: [],
+    isOpen: false,
   }),
-
   methods: {
-    toggleItem(id) {
-      const index = this.activeItems.indexOf(id)
-      if (index === -1) {
-        this.activeItems.push(id)
-      } else {
-        this.activeItems.splice(index, 1)
-      }
-    },
-    isActive(id) {
-      return this.activeItems.includes(id)
+    toggleOpen() {
+      this.isOpen = !this.isOpen
     },
   },
 }
 </script>
 <style scoped>
-/* A simple transition */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
+.toggle-button {
+  display: block;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+
+.accordion {
+  display: none;
+  transition: opacity 0.3s;
   opacity: 0;
+}
+
+.accordion.is-open {
+  display: block;
+  opacity: 1;
+}
+
+@media only screen and (min-width: 769px) {
+  .toggle-button {
+    display: none;
+  }
+
+  .accordion {
+    display: block;
+    opacity: 1;
+  }
 }
 </style>
